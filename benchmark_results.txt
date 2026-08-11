@@ -1,0 +1,5 @@
+Arabic CX Retrieval Benchmark (synthetic KB/eval set)
+
+word     R@1=0.750  R@3=0.900  MRR=0.832
+char     R@1=0.800  R@3=0.950  MRR=0.875
+hybrid   R@1=0.750  R@3=0.900  MRR=0.844

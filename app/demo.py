@@ -1,0 +1,22 @@
+DEMO_HTML = r'''<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arabic CX Intelligence Lab</title>
+<style>
+:root{--bg:#08111f;--panel:#0f1b2d;--ink:#eef5ff;--muted:#9eb0c7;--accent:#55d6be;--line:#20304a;--warn:#ffcf70}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,"Segoe UI",Tahoma,sans-serif;background:radial-gradient(circle at top,#142a43,var(--bg) 42%);color:var(--ink);min-height:100vh}
+.wrap{max-width:1060px;margin:auto;padding:46px 22px}.eyebrow{color:var(--accent);font-size:13px;letter-spacing:.12em;text-transform:uppercase}.hero h1{font-size:clamp(30px,6vw,58px);line-height:1.05;margin:10px 0 14px}.hero p{color:var(--muted);max-width:760px;font-size:17px;line-height:1.8}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:28px}.card{background:rgba(15,27,45,.9);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.18)}
+textarea{width:100%;min-height:118px;background:#091321;border:1px solid var(--line);border-radius:14px;color:var(--ink);padding:15px;font:inherit;resize:vertical;outline:none}textarea:focus{border-color:var(--accent)}button{margin-top:12px;border:0;border-radius:12px;padding:12px 18px;background:var(--accent);color:#062019;font-weight:800;cursor:pointer}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{font-size:12px;border:1px solid var(--line);padding:7px 9px;border-radius:999px;color:var(--muted);cursor:pointer}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{background:#091321;border:1px solid var(--line);border-radius:14px;padding:13px}.metric b{display:block;font-size:19px}.metric span{font-size:12px;color:var(--muted)}
+.answer{line-height:1.8}.hit{border-top:1px solid var(--line);padding:12px 0}.hit:first-child{border-top:0}.score{color:var(--accent);font-size:12px}.small{font-size:12px;color:var(--muted)}.warning{color:var(--warn)}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.meta{grid-template-columns:1fr}}
+</style></head>
+<body><main class="wrap"><section class="hero"><div class="eyebrow">Candidate Proof of Work · Synthetic Data</div><h1>Arabic CX Intelligence Lab</h1><p>نموذج مستقل يوضح طريقة التفكير في RAG وNLP وgrounding وprivacy وhuman escalation لبيئات خدمة العملاء العربية — بدون أي بيانات أو واجهات داخلية لأي شركة.</p></section>
+<div class="grid"><section class="card"><h3>جرّب استفسار عميل</h3><div class="chips"><span class="chip" onclick="setQ('اتخصم مني المبلغ مرتين من البطاقة ومحتاج حل')">خصم مكرر</span><span class="chip" onclick="setQ('الـ API بيرجع 500 و timeout اعمل ايه')">API failure</span><span class="chip" onclick="setQ('دي كارثة وهقدم شكوى رسمية بسبب احتيال')">تصعيد حساس</span></div><textarea id="q">اتخصم مني المبلغ مرتين من البطاقة ومحتاج حل</textarea><button onclick="run()">تشغيل التحليل</button><p class="small">POST /answer · PII redaction → triage → retrieval → grounded response</p></section>
+<section class="card"><h3>التحليل</h3><div class="meta"><div class="metric"><b id="intent">—</b><span>Intent</span></div><div class="metric"><b id="sentiment">—</b><span>Sentiment</span></div><div class="metric"><b id="escalation">—</b><span>Escalation</span></div></div><h3>Grounded answer</h3><div id="answer" class="answer small">اضغط تشغيل التحليل.</div></section></div>
+<section class="card" style="margin-top:18px"><h3>Evidence retrieval</h3><div id="hits" class="small">لا توجد نتائج بعد.</div></section>
+</main><script>
+function setQ(x){document.getElementById('q').value=x}
+async function run(){const q=document.getElementById('q').value; const a=document.getElementById('answer');a.textContent='جاري التحليل…';try{const r=await fetch('/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,top_k:3})});const d=await r.json();document.getElementById('intent').textContent=d.intent;document.getElementById('sentiment').textContent=d.sentiment;document.getElementById('escalation').textContent=d.escalation?'YES':'NO';a.textContent=d.answer;document.getElementById('hits').innerHTML=d.hits.map(h=>`<div class="hit"><div><b>${h.id} · ${h.title}</b> <span class="score">score ${h.score}</span></div><div>${h.snippet}</div></div>`).join('')}catch(e){a.innerHTML='<span class="warning">تعذر الاتصال بالـAPI.</span>'}}
+</script></body></html>'''
